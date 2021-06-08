@@ -1,47 +1,57 @@
-CREATE DATABASE SISTEMA_TICKETS;
-USE SISTEMA_TICKETS;
+create database sistema_tickets;
+use sistema_tickets;
 
-CREATE TABLE CATEGORIAS
+create table categorias
 (
-	ID INT NOT NULL AUTO_INCREMENT,
-    NOMBRE NVARCHAR (50) NOT NULL,
-    PRIMARY KEY (ID)
+	id int not null auto_increment,
+    nombre nvarchar (50) not null,
+    primary key (id)
     
-)ENGINE=INNODB;
+)engine=innodb;
 
-CREATE TABLE PERSONAL
+create table personal
 (
-	ID INT NOT NULL AUTO_INCREMENT,
-    NOMBRE NVARCHAR(50) NOT NULL,
-    APELLIDOS NVARCHAR(80) NOT NULL,
-    TELEFONO NVARCHAR(10) NULL,
-    DIRECCION NVARCHAR(150) NULL,
-	PRIMARY KEY(ID)
+	id int not null auto_increment,
+    nombre nvarchar(50) not null,
+    apellidos nvarchar(80) not null,
+    telefono nvarchar(10) null,
+    direccion nvarchar(150) null,
+	primary key(id)
     
-)ENGINE=INNODB;
+)engine=innodb;
 
-CREATE TABLE TICKETS
+create table tickets
 (
-	ID INT NOT NULL AUTO_INCREMENT,
-    NOMBRE NVARCHAR(50) NOT NULL,
-    DESCRIPCION NVARCHAR(100) NULL,
-    PRIORIDAD NVARCHAR(1) NOT NULL,
-    PERSONALID INT NOT NULL,
-    CATEGORIAID INT NOT NULL,
-    ESTATUS NVARCHAR(3) NOT NULL,
-    PRIMARY KEY (ID),
-    FOREIGN KEY (PERSONALID)	REFERENCES PERSONAL(ID)	ON UPDATE CASCADE ON DELETE RESTRICT,
-	FOREIGN KEY (CATEGORIAID) REFERENCES CATEGORIAS(ID) ON UPDATE CASCADE ON DELETE RESTRICT
+	id int not null auto_increment,
+    nombre nvarchar(50) not null,
+    descripcion nvarchar(100) null,
+    prioridad nvarchar(1) not null,
+    personalid int null,
+    categoriaid int null,
+    estatus nvarchar(3) not null,
+    primary key (id),
+    foreign key (personalid)	references personal(id)	on update cascade on delete cascade,
+	foreign key (categoriaid) references categorias(id) on update cascade on delete cascade
     
-)ENGINE=INNODB;
+)engine=innodb;
 
 
 
-INSERT INTO PERSONAL (NOMBRE,APELLIDOS,TELEFONO,DIRECCION) VALUES ("JOSUE","GAMEZ CARRASCO","1234567890","ALVARO OBREGON #115");
-INSERT INTO CATEGORIAS (NOMBRE) VALUES ("INCIDENCIA");
-INSERT INTO TICKETS (NOMBRE, DESCRIPCION, PRIORIDAD, PERSONALID, CATEGORIAID,ESTATUS) VALUES("BAJA DE MATERIA","QUISIERA DAR DE BAJA LA MATERIA DE GRAFICACION.","1","1","1","ESP");
+insert into personal (nombre,apellidos,telefono,direccion) values ("josue","gamez carrasco","1234567890","alvaro obregon #115");
+insert into personal (nombre,apellidos,telefono,direccion) values ("eliseo","blanco ramirez","1234567890","alvaro obregon #115");
+insert into categorias (nombre) values ("incidencia");
+insert into categorias (nombre) values ("consulta");
+insert into categorias (nombre) values ("peticion");
+insert into tickets (nombre, descripcion, prioridad, personalid, categoriaid,estatus) values("baja de materia","quisiera dar de baja la materia de graficacion.","1","1","1","esp");
+insert into tickets (nombre, descripcion, prioridad, personalid, categoriaid,estatus) values("baja de materia","quisiera dar de baja la materia de graficacion.","1","1","2","abt");
+insert into tickets (nombre, descripcion, prioridad, personalid, categoriaid,estatus) values("baja de materia","quisiera dar de baja la materia de graficacion.","1","2","1","fin");
+insert into tickets (nombre, descripcion, prioridad, personalid, categoriaid,estatus) values("baja de materia","quisiera dar de baja la materia de graficacion.","1","2","2","esp");
+insert into tickets (nombre, descripcion, prioridad, personalid, categoriaid,estatus) values("baja de materia","quisiera dar de baja la materia de graficacion.","1","1","3","abt");
+insert into tickets (nombre, descripcion, prioridad, personalid, categoriaid,estatus) values("baja de materia","quisiera dar de baja la materia de graficacion.","1","2","3","fin");
 
-CREATE VIEW VISTA_TICKETS AS
-SELECT TICKETS.ID, TICKETS.NOMBRE,DESCRIPCION,PRIORIDAD,PERSONAL.NOMBRE PERSONAL,CATEGORIAS.NOMBRE CATEGORIAS, ESTATUS from TICKETS
-INNER JOIN PERSONAL ON  PERSONAL.ID = TICKETS.PERSONALID
-INNER JOIN CATEGORIAS ON  CATEGORIAS.ID = TICKETS.CATEGORIAID;
+
+create view vista_tickets as
+select tickets.id, tickets.nombre,descripcion,prioridad,concat_ws(' ', personal.nombre, personal.apellidos) as personal,categorias.nombre categorias, estatus from tickets
+inner join personal on  personal.id = tickets.personalid
+inner join categorias on  categorias.id = tickets.categoriaid;
+
